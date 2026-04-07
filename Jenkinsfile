@@ -2,27 +2,16 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone') {
-            steps {
-                git 'https://github.com/Rohit-327/python-project.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t yourdockerhub/devops-app:v1 .'
+                bat 'docker build -t devops-app:v1 .'
             }
         }
 
-        stage('Push Image') {
+        stage('Deploy to Kubernetes') {
             steps {
-                sh 'docker push yourdockerhub/devops-app:v1'
-            }
-        }
-
-        stage('Deploy to K8s') {
-            steps {
-                sh 'kubectl apply -f deployment.yaml'
+                bat 'kubectl apply -f deployment.yaml'
+                bat 'kubectl apply -f service.yaml'
             }
         }
     }
